@@ -5,10 +5,10 @@ function App() {
   const [count, setCount] = useState(0)
   const [serverStatus, setServerStatus] = useState('checking...')
   const [loading, setLoading] = useState(true)
+  const apiBaseUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000'
 
   useEffect(() => {
-    // Check server health
-    fetch('http://localhost:5000/health')
+    fetch(`${apiBaseUrl}/health`)
       .then(res => res.json())
       .then(data => {
         setServerStatus(data.status)

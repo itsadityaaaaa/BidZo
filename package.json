@@ -12,10 +12,10 @@
     "build:client": "cd client && npm run build",
     "build:server": "cd server && npm run build"
   },
-  "dependencies": {
+  "dependencies": {},
+  "devDependencies": {
     "concurrently": "^8.2.2"
   },
-  "devDependencies": {},
   "engines": {
     "node": ">=18.0.0",
     "npm": ">=9.0.0"

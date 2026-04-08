@@ -1,0 +1,23 @@
+{
+  "name": "bidzo",
+  "version": "1.0.0",
+  "description": "Production-ready full-stack web application monorepo",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently \"npm run client\" \"npm run server\"",
+    "client": "cd client && npm run dev",
+    "server": "cd server && npm start",
+    "install-all": "npm install && cd client && npm install && cd ../server && npm install && cd ..",
+    "build": "npm run build:client && npm run build:server",
+    "build:client": "cd client && npm run build",
+    "build:server": "cd server && npm run build"
+  },
+  "dependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "devDependencies": {},
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  }
+}

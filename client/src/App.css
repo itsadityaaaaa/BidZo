@@ -142,6 +142,51 @@
   color: #4ade80;
 }
 
+.message-form {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.message-form input {
+  flex: 1;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.12);
+  background: rgba(255,255,255,0.06);
+  color: white;
+}
+
+.message-form button {
+  padding: 10px 16px;
+  border-radius: 8px;
+  border: none;
+  background: #4ade80;
+  color: #0f172a;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.messages-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: 320px;
+  overflow: auto;
+}
+
+.message-item {
+  background: rgba(0,0,0,0.15);
+  padding: 10px 12px;
+  border-radius: 8px;
+}
+
+.message-meta {
+  font-size: 0.8rem;
+  opacity: 0.7;
+  margin-top: 6px;
+}
+
 .footer {
   text-align: center;
   padding: 30px 20px;

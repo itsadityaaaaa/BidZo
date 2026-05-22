@@ -5,7 +5,12 @@ function App() {
   const [count, setCount] = useState(0)
   const [serverStatus, setServerStatus] = useState('checking...')
   const [loading, setLoading] = useState(true)
-  const apiBaseUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000'
+  const apiBaseUrl = import.meta.env.VITE_API_URL || ''
+
+  const [messages, setMessages] = useState([])
+  const [msgLoading, setMsgLoading] = useState(true)
+  const [messageText, setMessageText] = useState('')
+  const [posting, setPosting] = useState(false)
 
   useEffect(() => {
     fetch(`${apiBaseUrl}/health`)
@@ -20,6 +25,50 @@ function App() {
         setLoading(false)
       })
   }, [])
+
+  useEffect(() => {
+    fetchMessages()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  async function fetchMessages() {
+    setMsgLoading(true)
+    try {
+      const res = await fetch(`${apiBaseUrl}/api/messages?limit=50`)
+      const data = await res.json()
+      setMessages(data.messages || [])
+    } catch (err) {
+      console.error('Failed to fetch messages', err)
+      setMessages([])
+    } finally {
+      setMsgLoading(false)
+    }
+  }
+
+  async function handleSend(e) {
+    e.preventDefault()
+    if (!messageText || posting) return
+    setPosting(true)
+    try {
+      const res = await fetch(`${apiBaseUrl}/api/message`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: messageText })
+      })
+      const json = await res.json()
+      if (json && json.success) {
+        setMessageText('')
+        // refresh list
+        fetchMessages()
+      } else {
+        console.error('Failed to post message', json)
+      }
+    } catch (err) {
+      console.error('Failed to post message', err)
+    } finally {
+      setPosting(false)
+    }
+  }
 
   return (
     <div className="container">
@@ -60,6 +109,36 @@ function App() {
             <li>Review /shared for shared utilities and types</li>
             <li>Run <code>npm run dev</code> to start both apps</li>
           </ul>
+        </section>
+
+        <section className="card">
+          <h2>Messages</h2>
+          <form className="message-form" onSubmit={handleSend}>
+            <input
+              aria-label="message"
+              placeholder="Type a message..."
+              value={messageText}
+              onChange={e => setMessageText(e.target.value)}
+            />
+            <button type="submit" disabled={posting || !messageText}>{posting ? 'Sending…' : 'Send'}</button>
+          </form>
+
+          {msgLoading ? (
+            <p className="checking">Loading messages…</p>
+          ) : (
+            <div className="messages-list">
+              {messages.length === 0 ? (
+                <p>No messages yet.</p>
+              ) : (
+                messages.map(m => (
+                  <div className="message-item" key={m.id}>
+                    <div className="message-body">{m.message}</div>
+                    <div className="message-meta">{new Date(m.created_at).toLocaleString()}</div>
+                  </div>
+                ))
+              )}
+            </div>
+          )}
         </section>
       </main>
 
